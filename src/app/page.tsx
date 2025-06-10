@@ -1,8 +1,8 @@
+import Home from "@/components/Home/Home";
 
-
-export default function Home() {
+export default function page() {
   return (
-    <div className="flex justify-center">
+    <div className="w-full flex flex-col">
       <Home />
     </div>
   );
