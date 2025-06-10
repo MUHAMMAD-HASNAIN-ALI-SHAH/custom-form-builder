@@ -1,6 +1,6 @@
 "use client";
-
 import { useState } from "react";
+import Questions from "./Questions";
 
 export default function AddForm() {
   const [questions, setQuestions] = useState(1);
@@ -9,7 +9,7 @@ export default function AddForm() {
     <div className="w-full 2xl:w-[1200px] mx-auto px-4 py-8 mt-15">
       {/* title */}
 
-      <form action="" className="mt-5">
+      <div className="mt-5">
         <div className="flex flex-col items-center gap-5 justify-between mb-4 border-l-8 border-blue-600 border-t-8 border-b-2  px-4 py-9 rounded-lg">
           <input
             type="text"
@@ -27,15 +27,15 @@ export default function AddForm() {
 
         {questions > 0 &&
           Array.from({ length: questions }).map((_, index) => (
-            <div key={index} className="flex flex-col items-center gap-5 justify-between mb-4 border-2 border-gray-400 bg-white  px-4 py-9 rounded-lg">
-            <div className="flex items-center gap-2">
-              <span className="text-lg font-semibold">{index + 1}.</span>
-              <input
-                type="text"
-                placeholder={`Question ${index + 1}`}
-                className="w-full py-2 px-3 border-b-2 border-gray-300 focus:outline-none focus:border-blue-500"
-              />
-            </div>
+            <div
+              key={index}
+              className="mb-4 rounded-lg border-2 border-gray-300 bg-white p-6 shadow-sm"
+            >
+              <div className="grid gap-4">
+                <Questions />
+
+                <div></div>
+              </div>
             </div>
           ))}
 
@@ -49,7 +49,7 @@ export default function AddForm() {
             Add Question
           </button>
         </div>
-      </form>
+      </div>
     </div>
   );
 }
