@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 export default function Navbar() {
   const router = useRouter();
   return (
-    <nav className="w-full px-6 py-6 bg-white shadow-md flex items-center justify-between">
+    <nav className="w-full px-6 py-6 bg-white shadow-md fixed flex items-center justify-between">
       {/* Logo */}
       <div
         onClick={() => router.push("/")}
