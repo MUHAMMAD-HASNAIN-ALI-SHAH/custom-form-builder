@@ -2,6 +2,8 @@
 
 export default function Home() {
   return (
-    <div></div>
+    <div className="flex justify-center">
+      <Home />
+    </div>
   );
 }
