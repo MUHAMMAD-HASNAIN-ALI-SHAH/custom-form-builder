@@ -10,9 +10,6 @@ const questionsSchema = new mongoose.Schema({
   category: {
     type: String,
     enum: [
-      "general",
-      "technical",
-      "behavioral",
       "short",
       "paragraph",
       "multiple-choice",
