@@ -3,9 +3,6 @@ import mongoose from "mongoose";
 const questionsSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
-    unique: true,
-    trim: true,
   },
   category: {
     type: String,
@@ -30,7 +27,11 @@ const questionsSchema = new mongoose.Schema({
     ref: "Form",
     required: true,
   },
-});
+  index: {
+    type: Number,
+    required: true,
+  },
+},{ timestamps: true });
 
 const Questions = mongoose.model("Question", questionsSchema);
 
