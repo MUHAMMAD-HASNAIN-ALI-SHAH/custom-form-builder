@@ -20,6 +20,6 @@ const formSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Form = mongoose.model("Form", formSchema);
+const Form = mongoose.models.Form || mongoose.model("Form", formSchema);
 
 export default Form;
