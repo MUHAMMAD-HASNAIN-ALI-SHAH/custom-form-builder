@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Loader, Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import axios from "axios";
 
 const StarterForm = () => {
@@ -10,6 +10,7 @@ const StarterForm = () => {
 
   const createForm = async () => {
     setLoader(true);
+    redirect("/dashboard/create-form");
     // const response = await axios.post(
     //   "/api/form",
     //   {},
@@ -26,7 +27,7 @@ const StarterForm = () => {
   };
 
   return (
-    <div className="px-6 py-8">
+    <div className="px-6 py-8 mt-10">
       <h2 className="text-xl font-semibold mb-4 text-gray-800">
         Start a new form
       </h2>
