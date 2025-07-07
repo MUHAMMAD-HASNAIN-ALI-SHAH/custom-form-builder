@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Questions from "./Questions";
 import FormHeader from "./FormHeader";
-import { set } from "mongoose";
+import Navbar from "./Navbar";
 
 export default function AddForm() {
   const [questions, setQuestions] = useState<
@@ -46,10 +46,10 @@ export default function AddForm() {
     setQuestions((prev) => prev.filter((q) => q.index !== index));
   };
 
-  console.log("questions", questions);
-
   return (
-    <div className="w-full 2xl:w-[1200px] mx-auto px-4 py-8 mt-15">
+    <div className="w-full 2xl:w-[1200px] mx-auto px-4 py-8 mt-10">
+      <Navbar questions={questions} />
+
       {/* title */}
 
       <div className="mt-5">
