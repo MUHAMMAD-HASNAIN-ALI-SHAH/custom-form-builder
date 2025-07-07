@@ -1,24 +1,25 @@
 import { X } from "lucide-react";
 
 interface DropdownProps {
+  index: number;
   options: string[];
-  setOptions: React.Dispatch<React.SetStateAction<string[]>>;
+  onOptionsChange: (index: number, newOptions: string[]) => void;
 }
 
-const Dropdown: React.FC<DropdownProps> = ({ options, setOptions }) => {
-  const handleChange = (value: string, index: number) => {
+const Dropdown: React.FC<DropdownProps> = ({ index, options, onOptionsChange }) => {
+  const handleChange = (value: string, idx: number) => {
     const updated = [...options];
-    updated[index] = value;
-    setOptions(updated);
+    updated[idx] = value;
+    onOptionsChange(index, updated);
   };
 
   const addOption = () => {
-    setOptions([...options, ""]);
+    onOptionsChange(index, [...options, ""]);
   };
 
-  const removeOption = (index: number) => {
-    const updated = options.filter((_, idx) => idx !== index);
-    setOptions(updated);
+  const removeOption = (idx: number) => {
+    const updated = options.filter((_, i) => i !== idx);
+    onOptionsChange(index, updated);
   };
 
   return (
@@ -32,8 +33,7 @@ const Dropdown: React.FC<DropdownProps> = ({ options, setOptions }) => {
             className="border px-3 py-2 rounded-md w-full"
           />
           <span onClick={() => removeOption(idx)} className="cursor-pointer">
-            {" "}
-            <X />{" "}
+            <X />
           </span>
         </div>
       ))}
@@ -47,4 +47,5 @@ const Dropdown: React.FC<DropdownProps> = ({ options, setOptions }) => {
     </div>
   );
 };
+
 export default Dropdown;

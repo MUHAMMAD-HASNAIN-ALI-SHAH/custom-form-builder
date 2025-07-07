@@ -1,75 +1,42 @@
 import React, { useState } from "react";
-import ShortAnswer from "./Categories/ShortAnswer";
-import Paragraph from "./Categories/Paragraph";
 import MultipleChoice from "./Categories/MultipleChoice";
 import LinearScale from "./Categories/LinearScale";
-import DateInput from "./Categories/DateInput";
-import TimeInput from "./Categories/TimeInput";
 import Dropdown from "./Categories/Dropdown";
 import { DeleteIcon } from "lucide-react";
 import CheckboxOptions from "./Categories/CheckBox";
 
 const Questions = ({
-  index,
+  question,
   onDeleteQuestion,
+  onQuestionChange,
+  onOptionsChange,
 }: {
-  index: number;
+  question: {
+    index: number;
+    questionType: string;
+    questionText: string;
+    options: string[];
+  };
   onDeleteQuestion: (index: number) => void;
+  onQuestionChange: (index: number, updated: Partial<typeof question>) => void;
+  onOptionsChange: (index: number, newOptions: string[]) => void;
 }) => {
-  const [formData, setFormData] = useState({
-    question: "",
-    type: "",
-  });
-  const [optionsMultipleChoice, setOptionsMultipleChoice] = useState([""]);
-  const [optionsDropDown, setOptionsDropDown] = useState([""]);
   const [optionsCheckBox, setOptionsCheckBox] = useState([""]);
 
-  const cleanCategories = () => {
-    setOptionsMultipleChoice([""]);
-    setOptionsDropDown([""]);
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onQuestionChange(question.index, { questionText: e.target.value });
   };
 
-  const handleInputChange = (e: any) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleCategoryChange = (e: any) => {
-    cleanCategories();
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const questionData = {
-      ...formData,
-      options:
-        formData.type === "multiple-choice"
-          ? optionsMultipleChoice
-          : formData.type === "dropdown"
-          ? optionsDropDown
-          : formData.type === "check-box"
-          ? optionsCheckBox
-          : undefined,
-    };
-    console.log("Question Data:", questionData);
-    console.log("Question Data Index :", index);
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    onQuestionChange(question.index, { questionType: e.target.value });
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center bg-white p-4 rounded-md shadow-sm"
-    >
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center bg-white p-4 rounded-md shadow-sm">
       <input
         type="text"
         name="question"
-        value={formData.question}
+        value={question.questionText}
         onChange={handleInputChange}
         placeholder="Untitled Question"
         className="col-span-2 w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -77,7 +44,7 @@ const Questions = ({
 
       <select
         name="type"
-        value={formData.type}
+        value={question.questionType}
         onChange={handleCategoryChange}
         className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
@@ -89,42 +56,45 @@ const Questions = ({
         <option value="linear-scale">Linear Scale</option>
         <option value="date">Date</option>
         <option value="time">Time</option>
+        <option value="file-upload">File Upload</option>
       </select>
 
-      {formData.type === "short" && <ShortAnswer />}
-      {formData.type === "paragraph" && <Paragraph />}
-      {formData.type === "multiple-choice" && (
+      {question.questionType === "multiple-choice" && (
         <MultipleChoice
-          options={optionsMultipleChoice}
-          setOptions={setOptionsMultipleChoice}
+          index={question.index}
+          options={question.options}
+          onOptionsChange={onOptionsChange}
         />
       )}
-      {formData.type === "dropdown" && (
-        <Dropdown options={optionsDropDown} setOptions={setOptionsDropDown} />
+      {question.questionType === "dropdown" && (
+        <Dropdown
+          index={question.index}
+          options={question.options}
+          onOptionsChange={onOptionsChange}
+        />
       )}
-      {formData.type === "check-box" && (
+      {question.questionType === "check-box" && (
         <CheckboxOptions
-          options={optionsCheckBox}
-          setOptions={setOptionsCheckBox}
+          index={question.index}
+          options={question.options}
+          onOptionsChange={onOptionsChange}
         />
       )}
-      {formData.type === "linear-scale" && <LinearScale />}
-      {formData.type === "date" && <DateInput />}
-      {formData.type === "time" && <TimeInput />}
+      {question.questionType === "linear-scale" && (
+        <LinearScale
+          index={question.index}
+          options={question.options}
+          onOptionsChange={onOptionsChange}
+        />
+      )}
 
       <div className="md:col-span-3 flex justify-end items-center gap-4">
         <DeleteIcon
           className="cursor-pointer"
-          onClick={() => onDeleteQuestion(index)}
+          onClick={() => onDeleteQuestion(question.index)}
         />
-        <button
-          type="submit"
-          className="mt-3 md:mt-0 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-        >
-          Save Question
-        </button>
       </div>
-    </form>
+    </div>
   );
 };
 

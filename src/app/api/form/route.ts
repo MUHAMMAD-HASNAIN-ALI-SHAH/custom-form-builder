@@ -6,7 +6,6 @@ export async function POST(request: Request) {
   await connectDB();
 
   try {
-    const body = await request.json();
     const userId = request.headers.get("userId");
 
     if (!userId) {

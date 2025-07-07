@@ -1,45 +1,50 @@
-import React, { useState } from "react";
+import { useEffect } from "react";
 
-const LinearScale = () => {
-  const [min, setMin] = useState(1);
-  const [max, setMax] = useState(5);
+interface LinearScaleProps {
+  index: number;
+  options: string[];
+  onOptionsChange: (questionIndex: number, newOptions: string[]) => void;
+}
 
-  const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value);
-    setMin(value);
-    if (value >= max) {
-      setMax(value + 1);
+const LinearScale: React.FC<LinearScaleProps> = ({
+  index,
+  options,
+  onOptionsChange,
+}) => {
+  useEffect(() => {
+    if (options.length !== 2) {
+      onOptionsChange(index, ["1", "5"]);
     }
-  };
+  }, [index, onOptionsChange, options]);
 
-  const handleMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value);
-    setMax(value);
-    if (value <= min) {
-      setMin(value - 1);
-    }
+  const handleChange = (value: number, optionIndex: number) => {
+    const num = Math.max(1, Math.min(50, value)); // Clamp value between 1 and 50
+    const updated = [...options];
+    updated[optionIndex] = String(num);
+    onOptionsChange(index, updated);
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-2">
+      <label className="text-gray-600">Linear Scale (1 to 50)</label>
       <div className="flex items-center gap-4">
         <input
           type="number"
-          value={min}
-          min={0}
-          max={9}
-          onChange={handleMinChange}
-          className="w-20 border px-2 py-1 rounded"
+          value={options[0] || ""}
+          onChange={(e) => handleChange(Number(e.target.value), 0)}
+          min={1}
+          max={49}
+          className="w-24 border px-3 py-2 rounded"
           placeholder="Min"
         />
-        <span className="text-gray-600">to</span>
+
         <input
           type="number"
-          value={max}
-          min={1}
-          max={10}
-          onChange={handleMaxChange}
-          className="w-20 border px-2 py-1 rounded"
+          value={options[1] || ""}
+          onChange={(e) => handleChange(Number(e.target.value), 1)}
+          min={2}
+          max={50}
+          className="w-24 border px-3 py-2 rounded"
           placeholder="Max"
         />
       </div>

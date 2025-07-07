@@ -4,26 +4,26 @@ import { Loader, Plus } from "lucide-react";
 import { redirect, useRouter } from "next/navigation";
 import axios from "axios";
 
-const StarterForm = () => {
+const StarterForm = ({session}:{session:any}) => {
   const router = useRouter();
   const [loader, setLoader] = useState(false);
+  const user = session?.user;
 
   const createForm = async () => {
     setLoader(true);
-    redirect("/dashboard/create-form");
-    // const response = await axios.post(
-    //   "/api/form",
-    //   {},
-    //   {
-    //     headers: {
-    //       userId: user?.id,
-    //     },
-    //   }
-    // );
-    // setLoader(false);
-    // router.push(
-    //   response.data.formId ? `/create-form/${response.data.formId}` : "/"
-    // );
+    const response = await axios.post(
+      "/api/form",
+      {},
+      {
+        headers: {
+          userId: user?.id,
+        },
+      }
+    );
+    setLoader(false);
+    router.push(
+      response.data.formId ? `/dashboard/${response.data.formId}` : "/"
+    );
   };
 
   return (

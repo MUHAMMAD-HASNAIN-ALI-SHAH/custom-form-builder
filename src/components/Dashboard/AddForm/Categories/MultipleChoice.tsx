@@ -2,27 +2,29 @@ import { X } from "lucide-react";
 import React, { useState } from "react";
 
 interface MultipleChoiceProps {
+  index: number;
   options: string[];
-  setOptions: React.Dispatch<React.SetStateAction<string[]>>;
+  onOptionsChange: (index: number, newOptions: string[]) => void;
 }
 
 const MultipleChoice: React.FC<MultipleChoiceProps> = ({
+  index,
   options,
-  setOptions,
+  onOptionsChange,
 }) => {
-  const handleChange = (value: string, index: number) => {
+  const handleChange = (value: string, idx: number) => {
     const updated = [...options];
-    updated[index] = value;
-    setOptions(updated);
+    updated[idx] = value;
+    onOptionsChange(index, updated);
   };
 
   const addOption = () => {
-    setOptions([...options, ""]);
+    onOptionsChange(index, [...options, ""]);
   };
 
-  const removeOption = (index: number) => {
-    const updated = options.filter((_, idx) => idx !== index);
-    setOptions(updated);
+  const removeOption = (idx: number) => {
+    const updated = options.filter((_, i) => i !== idx);
+    onOptionsChange(index, updated);
   };
 
   return (
