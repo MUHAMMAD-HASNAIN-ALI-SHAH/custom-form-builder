@@ -4,6 +4,7 @@ import LinearScale from "./Categories/LinearScale";
 import Dropdown from "./Categories/Dropdown";
 import { DeleteIcon } from "lucide-react";
 import CheckboxOptions from "./Categories/CheckBox";
+import Radio from "./Categories/Radio";
 
 const Questions = ({
   question,
@@ -21,8 +22,6 @@ const Questions = ({
   onQuestionChange: (index: number, updated: Partial<typeof question>) => void;
   onOptionsChange: (index: number, newOptions: string[]) => void;
 }) => {
-  const [optionsCheckBox, setOptionsCheckBox] = useState([""]);
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onQuestionChange(question.index, { questionText: e.target.value });
   };
@@ -49,9 +48,12 @@ const Questions = ({
         className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
         <option value="short">Short Answer</option>
+        <option value="email">Email</option>
+        <option value="number">Number</option>
         <option value="paragraph">Paragraph</option>
         <option value="multiple-choice">Multiple Choice</option>
         <option value="dropdown">Dropdown</option>
+        <option value="radio">Radio</option>
         <option value="check-box">Check Box</option>
         <option value="linear-scale">Linear Scale</option>
         <option value="date">Date</option>
@@ -82,6 +84,13 @@ const Questions = ({
       )}
       {question.questionType === "linear-scale" && (
         <LinearScale
+          index={question.index}
+          options={question.options}
+          onOptionsChange={onOptionsChange}
+        />
+      )}
+      {question.questionType === "radio" && (
+        <Radio
           index={question.index}
           options={question.options}
           onOptionsChange={onOptionsChange}
