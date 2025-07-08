@@ -21,6 +21,13 @@ interface FormState {
   duplicateQuestion: (index: number) => void;
   onCategoryChange: (index: number, newCategory: string) => void;
   resetForm: () => void;
+  onFormSubmit: (
+    questions: Questions[],
+    formHeader: {
+      title: string;
+      description: string;
+    }
+  ) => void;
 }
 
 const useFormStore = create<FormState>((set) => ({
@@ -41,7 +48,7 @@ const useFormStore = create<FormState>((set) => ({
       const newIndex = state.questions.length;
       const newQuestion: Questions = {
         index: newIndex,
-        questionType: "text",
+        questionType: "short",
         questionText: "",
         options: [],
       };
@@ -108,6 +115,17 @@ const useFormStore = create<FormState>((set) => ({
       },
       questions: [],
     })),
+  onFormSubmit: async (questions, formHeader) => {
+    const response = await fetch("/api/form", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ formHeader, questions }),
+    });
+    alert("Form submitted successfully!");
+    console.log(response);
+  },
 }));
 
 export default useFormStore;

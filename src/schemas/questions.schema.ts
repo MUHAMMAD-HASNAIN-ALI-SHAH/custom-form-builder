@@ -1,38 +1,46 @@
 import mongoose from "mongoose";
 
-const questionsSchema = new mongoose.Schema({
-  name: {
-    type: String,
-  },
-  category: {
-    type: String,
-    enum: [
-      "short",
-      "paragraph",
-      "multiple-choice",
-      "dropdown",
-      "check-box",
-      "linear-scale",
-      "date",
-      "time",
-    ],
-  },
-  options: [
-    {
+const questionsSchema = new mongoose.Schema(
+  {
+    questionText: {
       type: String,
     },
-  ],
-  formId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Form",
-    required: true,
+    questionType: {
+      type: String,
+      enum: [
+        "email",
+        "number",
+        "short",
+        "file-upload",
+        "paragraph",
+        "multiple-choice",
+        "dropdown",
+        "check-box",
+        "radio",
+        "linear-scale",
+        "date",
+        "time",
+      ],
+    },
+    options: [
+      {
+        type: String,
+      },
+    ],
+    formId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Form",
+      required: true,
+    },
+    index: {
+      type: Number,
+      required: true,
+    },
   },
-  index: {
-    type: Number,
-    required: true,
-  },
-},{ timestamps: true });
+  { timestamps: true }
+);
 
-const Questions = mongoose.model("Question", questionsSchema);
+const Questions =
+  mongoose.models.Question || mongoose.model("Question", questionsSchema);
 
 export default Questions;
