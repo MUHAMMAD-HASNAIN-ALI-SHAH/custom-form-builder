@@ -1,16 +1,13 @@
 import React, { useState } from "react";
-import MultipleChoice from "./Categories/MultipleChoice";
-import LinearScale from "./Categories/LinearScale";
-import Dropdown from "./Categories/Dropdown";
-import { DeleteIcon } from "lucide-react";
-import CheckboxOptions from "./Categories/CheckBox";
-import Radio from "./Categories/Radio";
+import { Copy, DeleteIcon } from "lucide-react";
+import QuestionType from "./QuestionType";
 
 const Questions = ({
   question,
   onDeleteQuestion,
   onQuestionChange,
   onOptionsChange,
+  duplicateQuestion,
 }: {
   question: {
     index: number;
@@ -21,6 +18,7 @@ const Questions = ({
   onDeleteQuestion: (index: number) => void;
   onQuestionChange: (index: number, updated: Partial<typeof question>) => void;
   onOptionsChange: (index: number, newOptions: string[]) => void;
+  duplicateQuestion: (index: number) => void;
 }) => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onQuestionChange(question.index, { questionText: e.target.value });
@@ -61,43 +59,13 @@ const Questions = ({
         <option value="file-upload">File Upload</option>
       </select>
 
-      {question.questionType === "multiple-choice" && (
-        <MultipleChoice
-          index={question.index}
-          options={question.options}
-          onOptionsChange={onOptionsChange}
-        />
-      )}
-      {question.questionType === "dropdown" && (
-        <Dropdown
-          index={question.index}
-          options={question.options}
-          onOptionsChange={onOptionsChange}
-        />
-      )}
-      {question.questionType === "check-box" && (
-        <CheckboxOptions
-          index={question.index}
-          options={question.options}
-          onOptionsChange={onOptionsChange}
-        />
-      )}
-      {question.questionType === "linear-scale" && (
-        <LinearScale
-          index={question.index}
-          options={question.options}
-          onOptionsChange={onOptionsChange}
-        />
-      )}
-      {question.questionType === "radio" && (
-        <Radio
-          index={question.index}
-          options={question.options}
-          onOptionsChange={onOptionsChange}
-        />
-      )}
+      <QuestionType question={question} onOptionsChange={onOptionsChange} />
 
       <div className="md:col-span-3 flex justify-end items-center gap-4">
+        <Copy
+          className="cursor-pointer"
+          onClick={() => duplicateQuestion(question.index)}
+        />
         <DeleteIcon
           className="cursor-pointer"
           onClick={() => onDeleteQuestion(question.index)}

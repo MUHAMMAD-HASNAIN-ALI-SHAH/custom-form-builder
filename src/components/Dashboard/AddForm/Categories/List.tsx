@@ -1,12 +1,12 @@
 import { X } from "lucide-react";
 
-interface CheckBoxProps {
+interface ListProps {
   index: number;
   options: string[];
   onOptionsChange: (questionIndex: number, newOptions: string[]) => void;
 }
 
-const CheckBox: React.FC<CheckBoxProps> = ({ index, options, onOptionsChange }) => {
+const List: React.FC<ListProps> = ({ index, options, onOptionsChange }) => {
   const handleChange = (value: string, optionIndex: number) => {
     const updated = [...options];
     updated[optionIndex] = value;
@@ -48,4 +48,4 @@ const CheckBox: React.FC<CheckBoxProps> = ({ index, options, onOptionsChange }) 
   );
 };
 
-export default CheckBox;
+export default List;

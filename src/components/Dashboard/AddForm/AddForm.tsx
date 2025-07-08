@@ -13,6 +13,10 @@ export default function AddForm() {
       options: string[];
     }[]
   >([]);
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+  });
 
   const onQuestionChange = (
     index: number,
@@ -36,6 +40,31 @@ export default function AddForm() {
     );
   };
 
+  const duplicateQuestion = (index: number) => {
+    setQuestions((prev) => {
+      const originalIndex = prev.findIndex((q) => q.index === index);
+      if (originalIndex === -1) return prev;
+
+      const questionToDuplicate = prev[originalIndex];
+
+      const duplicated = {
+        ...questionToDuplicate,
+        index: -1,
+      };
+
+      const newQuestions = [
+        ...prev.slice(0, originalIndex + 1),
+        duplicated,
+        ...prev.slice(originalIndex + 1),
+      ];
+
+      return newQuestions.map((q, i) => ({
+        ...q,
+        index: i,
+      }));
+    });
+  };
+
   const onOptionsChange = (index: number, newOptions: string[]) => {
     setQuestions((prev) =>
       prev.map((q) => (q.index === index ? { ...q, options: newOptions } : q))
@@ -48,14 +77,10 @@ export default function AddForm() {
 
   return (
     <div className="w-full 2xl:w-[1200px] mx-auto px-4 py-8 mt-10">
-      <Navbar questions={questions} />
-
-      {/* title */}
+      <Navbar questions={questions} formData={formData} />
 
       <div className="mt-5">
-        <FormHeader index={questions.length} />
-
-        {/* Form Fields */}
+        <FormHeader setFormData={setFormData} formData={formData} />
 
         {questions.length > 0 &&
           questions.map((question) => (
@@ -69,13 +94,13 @@ export default function AddForm() {
                   onDeleteQuestion={onDeleteQuestion}
                   onQuestionChange={onQuestionChange}
                   onOptionsChange={onOptionsChange}
+                  duplicateQuestion={duplicateQuestion}
                 />
                 <div></div>
               </div>
             </div>
           ))}
 
-        {/* Add Question Button */}
         <div className="flex justify-center mb-4">
           <button
             type="button"
