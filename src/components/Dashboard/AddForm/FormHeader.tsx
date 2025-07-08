@@ -1,23 +1,13 @@
-import React, { useState } from "react";
+"use client";
+import useFormStore from "@/store/useFormStore";
+import React from "react";
 
-interface FormHeaderProps {
-  formData: {
-    title: string;
-    description: string;
-    [key: string]: any;
-  };
-  setFormData: React.Dispatch<React.SetStateAction<any>>;
-}
-
-const FormHeader = ({ formData, setFormData }: FormHeaderProps) => {
-  
+const FormHeader = () => {
+  const { formHeader, setFormHeader } = useFormStore();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev: any) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormHeader(name, value);
   };
 
   return (
@@ -28,7 +18,7 @@ const FormHeader = ({ formData, setFormData }: FormHeaderProps) => {
         name="title"
         type="text"
         placeholder="Untitled Form"
-        value={formData.title}
+        value={formHeader.title}
         onChange={handleChange}
         className="w-full py-3 px-3 border-b-2 border-black focus:outline-none focus:border-b-2 focus:border-black text-3xl font-bold text-black"
       />
@@ -36,7 +26,7 @@ const FormHeader = ({ formData, setFormData }: FormHeaderProps) => {
         name="description"
         type="text"
         placeholder="Add a description"
-        value={formData.description}
+        value={formHeader.description}
         onChange={handleChange}
         className="w-full py-3 px-3 border-b-2 border-black focus:outline-none focus:border-b-2 focus:border-black text-xl"
       />

@@ -1,47 +1,36 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import useFormStore from "@/store/useFormStore";
 
 import React from "react";
 
-export default function Navbar({
-  questions,
-  formData,
-}: {
-  questions: {
-    index: number;
-    questionType: string;
-    questionText: string;
-    options: string[];
-  }[];
-  formData:{
-    title: string;
-    description: string;
-  }
-}) {
+export default function AddFormNavbar() {
+  const { questions, formHeader } = useFormStore();
   const handlePublish = () => {
-    if(!formData.title.trim()) {
+    let isValid = true;
+    if (!formHeader.title.trim()) {
       alert("Form title cannot be empty.");
-      return;
+      isValid = false;
     }
-    if(!formData.description.trim()) {
+    if (!formHeader.description.trim()) {
       alert("Form description cannot be empty.");
-      return;
+      isValid = false;
     }
     if (questions.length === 0) {
       alert("Please add at least one question to the form.");
-      return;
+      isValid = false;
     }
     questions.forEach((question) => {
       if (question.questionText.trim() === "") {
         alert(`Question ${question.index + 1} cannot be empty.`);
-        return;
+        isValid = false;
       }
       if (
         question.questionType === "multiple-choice" &&
         question.options.length < 2
       ) {
         alert(`Question ${question.index + 1} must have at least two options.`);
-        return;
+        isValid = false;
       }
       if (
         question.questionType === "linear-scale" &&
@@ -52,7 +41,7 @@ export default function Navbar({
             question.index + 1
           } must have exactly two options for linear scale.`
         );
-        return;
+        isValid = false;
       }
       if (question.questionType === "dropdown" && question.options.length < 1) {
         alert(
@@ -60,7 +49,7 @@ export default function Navbar({
             question.index + 1
           } must have at least one option for dropdown.`
         );
-        return;
+        isValid = false;
       }
       if (question.questionType === "radio" && question.options.length < 1) {
         alert(
@@ -68,7 +57,7 @@ export default function Navbar({
             question.index + 1
           } must have at least one option for radio.`
         );
-        return;
+        isValid = false;
       }
       if (
         question.questionType === "check-box" &&
@@ -79,7 +68,7 @@ export default function Navbar({
             question.index + 1
           } must have at least one option for check box.`
         );
-        return;
+        isValid = false;
       }
       question.options.forEach((option, idx) => {
         if (option.trim() === "") {
@@ -88,12 +77,13 @@ export default function Navbar({
               question.index + 1
             } cannot be empty.`
           );
-          return;
+          isValid = false;
         }
       });
     });
+    if(!isValid) return;
     console.log(questions);
-    console.log(formData);
+    console.log(formHeader);
   };
   return (
     <nav className="w-full px-6 py-4 bg-white shadow-sm border-b border-gray-200">

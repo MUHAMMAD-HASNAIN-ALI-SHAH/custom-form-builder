@@ -1,29 +1,17 @@
 "use client";
 import React, { useState } from "react";
-import { Loader, Plus } from "lucide-react";
-import { redirect, useRouter } from "next/navigation";
-import axios from "axios";
+import { Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 
-const StarterForm = ({session}:{session:any}) => {
+const StarterForm = ({ session }: { session: any }) => {
   const router = useRouter();
   const [loader, setLoader] = useState(false);
-  const user = session?.user;
 
   const createForm = async () => {
     setLoader(true);
-    const response = await axios.post(
-      "/api/form",
-      {},
-      {
-        headers: {
-          userId: user?.id,
-        },
-      }
-    );
+
+    router.push("/dashboard/create-form");
     setLoader(false);
-    router.push(
-      response.data.formId ? `/dashboard/${response.data.formId}` : "/"
-    );
   };
 
   return (

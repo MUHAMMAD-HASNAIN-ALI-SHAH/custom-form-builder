@@ -1,6 +1,6 @@
 import React from 'react'
-import List from './Categories/List';
-import LinearScale from './Categories/LinearScale';
+import List from '../Categories/List';
+import LinearScale from '../Categories/LinearScale';
 
 type QuestionTypeProps = {
   question: {
