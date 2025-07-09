@@ -27,6 +27,11 @@ const questionsSchema = new mongoose.Schema(
         type: String,
       },
     ],
+    required: {
+      type: Boolean,
+      default: false,
+      required: true,
+    },
     formId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Form",
@@ -41,6 +46,6 @@ const questionsSchema = new mongoose.Schema(
 );
 
 const Questions =
-  mongoose.models.Question || mongoose.model("Question", questionsSchema);
+  mongoose.models.Questions || mongoose.model("Questions", questionsSchema);
 
 export default Questions;

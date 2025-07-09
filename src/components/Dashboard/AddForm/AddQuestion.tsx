@@ -1,9 +1,9 @@
 "use client";
-import useFormStore from "@/store/useFormStore";
+import useCreateFormStore from "@/store/useCreateFormStore";
 import React from "react";
 
 const AddQuestion = () => {
-  const {addQuestion} = useFormStore();
+  const {addQuestion} = useCreateFormStore();
   return (
     <div className="flex justify-center mb-4">
       <button

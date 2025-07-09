@@ -1,130 +1,24 @@
+import axios from "axios";
 import { create } from "zustand";
 
-interface Questions {
-  index: number;
-  questionType: string;
-  questionText: string;
-  options: string[];
+interface Forms {
+  _id: string;
+  title: string;
+  description: string;
 }
 
 interface FormState {
-  formHeader: {
-    title: string;
-    description: string;
-  };
-  questions: Questions[];
-  setFormHeader: (field: string, value: string) => void;
-  addQuestion: () => void;
-  onQuestionChange: (index: number, updated: Partial<Questions>) => void;
-  onOptionsChange: (index: number, newOptions: string[]) => void;
-  onDeleteQuestion: (index: number) => void;
-  duplicateQuestion: (index: number) => void;
-  onCategoryChange: (index: number, newCategory: string) => void;
-  resetForm: () => void;
-  onFormSubmit: (
-    questions: Questions[],
-    formHeader: {
-      title: string;
-      description: string;
-    }
-  ) => void;
+  forms: Forms[];
+  getForms: () => Promise<void>;
 }
 
 const useFormStore = create<FormState>((set) => ({
-  questions: [],
-  formHeader: {
-    title: "",
-    description: "",
-  },
-  setFormHeader: (field, value) =>
-    set((state) => ({
-      formHeader: {
-        ...state.formHeader,
-        [field]: value,
-      },
-    })),
-  addQuestion: () => {
-    set((state) => {
-      const newIndex = state.questions.length;
-      const newQuestion: Questions = {
-        index: newIndex,
-        questionType: "short",
-        questionText: "",
-        options: [],
-      };
-      return {
-        questions: [...state.questions, newQuestion],
-      };
-    });
-  },
-  onQuestionChange: (index, updated) => {
-    set((state) => ({
-      questions: state.questions.map((q) =>
-        q.index === index ? { ...q, ...updated } : q
-      ),
-    }));
-  },
-  onOptionsChange: (index, newOptions) => {
-    set((state) => ({
-      questions: state.questions.map((q) =>
-        q.index === index ? { ...q, options: newOptions } : q
-      ),
-    }));
-  },
-  onDeleteQuestion: (index) => {
-    set((state) => {
-      const updatedQuestions = state.questions
-        .filter((q) => q.index !== index)
-        .map((q, i) => ({ ...q, index: i }));
-
-      return { questions: updatedQuestions };
-    });
-  },
-  duplicateQuestion: (index) => {
-    set((state) => {
-      const originalIndex = state.questions.findIndex((q) => q.index === index);
-      if (originalIndex === -1) return state;
-
-      const questionToDuplicate = state.questions[originalIndex];
-      const duplicated = {
-        ...questionToDuplicate,
-        index: state.questions.length,
-      };
-
-      return {
-        questions: [
-          ...state.questions.slice(0, originalIndex + 1),
-          duplicated,
-          ...state.questions.slice(originalIndex + 1),
-        ].map((q, i) => ({ ...q, index: i })),
-      };
-    });
-  },
-  onCategoryChange: (index, newCategory) => {
-    set((state) => ({
-      questions: state.questions.map((q) =>
-        q.index === index ? { ...q, questionType: newCategory } : q
-      ),
-    }));
-  },
-  resetForm: () =>
-    set(() => ({
-      formHeader: {
-        title: "",
-        description: "",
-      },
-      questions: [],
-    })),
-  onFormSubmit: async (questions, formHeader) => {
-    const response = await fetch("/api/form", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ formHeader, questions }),
-    });
-    alert("Form submitted successfully!");
-    console.log(response);
+  forms: [],
+  getForms: async () => {
+    try {
+      const response = await axios.get("/api/form");
+      set({ forms: response.data.forms });
+    } catch (error) {}
   },
 }));
 

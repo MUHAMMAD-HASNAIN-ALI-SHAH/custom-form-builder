@@ -1,5 +1,5 @@
 "use client";
-import useFormStore from "@/store/useFormStore";
+import useCreateFormStore from "@/store/useCreateFormStore";
 import React from "react";
 import Questions from "./Questions";
 
@@ -10,7 +10,7 @@ const QuestionsBox = () => {
     onOptionsChange,
     onDeleteQuestion,
     duplicateQuestion,
-  } = useFormStore();
+  } = useCreateFormStore();
   return (
     <>
       {questions.length > 0 &&
@@ -22,10 +22,6 @@ const QuestionsBox = () => {
             <div className="grid gap-4">
               <Questions
                 question={question}
-                onDeleteQuestion={onDeleteQuestion}
-                onQuestionChange={onQuestionChange}
-                onOptionsChange={onOptionsChange}
-                duplicateQuestion={duplicateQuestion}
               />
               <div></div>
             </div>

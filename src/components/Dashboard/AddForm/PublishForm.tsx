@@ -1,11 +1,18 @@
+"use client";
 import { Button } from "@/components/ui/button";
-import useFormStore from "@/store/useFormStore";
+import useCreateFormStore from "@/store/useCreateFormStore";
+import { useRouter } from "next/navigation";
 import React from "react";
+import { toast } from "react-toastify";
 
 const PublishForm = () => {
-  const { questions, formHeader, onFormSubmit } = useFormStore();
+  const { questions, formHeader, onFormSubmit } = useCreateFormStore();
+  const router = useRouter();
+
   const handlePublish = async () => {
     let isValid = true;
+
+    // 🔎 Validation
     if (!formHeader.title.trim()) {
       alert("Form title cannot be empty.");
       isValid = false;
@@ -18,11 +25,27 @@ const PublishForm = () => {
       alert("Please add at least one question to the form.");
       isValid = false;
     }
+
     questions.forEach((question) => {
       if (question.questionText.trim() === "") {
         alert(`Question ${question.index + 1} cannot be empty.`);
         isValid = false;
       }
+
+      const requiresOptions = [
+        "multiple-choice",
+        "dropdown",
+        "radio",
+        "check-box",
+      ];
+      if (
+        requiresOptions.includes(question.questionType) &&
+        question.options.length < 1
+      ) {
+        alert(`Question ${question.index + 1} must have at least one option.`);
+        isValid = false;
+      }
+
       if (
         question.questionType === "multiple-choice" &&
         question.options.length < 2
@@ -30,6 +53,7 @@ const PublishForm = () => {
         alert(`Question ${question.index + 1} must have at least two options.`);
         isValid = false;
       }
+
       if (
         question.questionType === "linear-scale" &&
         question.options.length !== 2
@@ -41,33 +65,7 @@ const PublishForm = () => {
         );
         isValid = false;
       }
-      if (question.questionType === "dropdown" && question.options.length < 1) {
-        alert(
-          `Question ${
-            question.index + 1
-          } must have at least one option for dropdown.`
-        );
-        isValid = false;
-      }
-      if (question.questionType === "radio" && question.options.length < 1) {
-        alert(
-          `Question ${
-            question.index + 1
-          } must have at least one option for radio.`
-        );
-        isValid = false;
-      }
-      if (
-        question.questionType === "check-box" &&
-        question.options.length < 1
-      ) {
-        alert(
-          `Question ${
-            question.index + 1
-          } must have at least one option for check box.`
-        );
-        isValid = false;
-      }
+
       question.options.forEach((option, idx) => {
         if (option.trim() === "") {
           alert(
@@ -79,9 +77,24 @@ const PublishForm = () => {
         }
       });
     });
+
     if (!isValid) return;
-    await onFormSubmit(questions, formHeader);
+
+    onFormSubmit(questions, formHeader)
+      .then((res) => {
+        toast.success(res.data.message, {
+          position: "top-right",
+          autoClose: 5000,
+        });
+        useCreateFormStore.getState().resetForm();
+        router.push("/dashboard");
+      })
+      .catch((error: any) => {
+        console.error("Error submitting form:", error);
+        toast.error("Failed to submit form. Please try again later.");
+      });
   };
+
   return (
     <div className="flex items-center space-x-2">
       <Button

@@ -1,31 +1,39 @@
 import React, { useState } from "react";
 import { Copy, DeleteIcon } from "lucide-react";
 import QuestionType from "./QuestionType";
+import useCreateFormStore from "@/store/useCreateFormStore";
 
 const Questions = ({
   question,
-  onDeleteQuestion,
-  onQuestionChange,
-  onOptionsChange,
-  duplicateQuestion,
 }: {
   question: {
     index: number;
     questionType: string;
     questionText: string;
+    required: boolean;
     options: string[];
   };
-  onDeleteQuestion: (index: number) => void;
-  onQuestionChange: (index: number, updated: Partial<typeof question>) => void;
-  onOptionsChange: (index: number, newOptions: string[]) => void;
-  duplicateQuestion: (index: number) => void;
 }) => {
+  const {
+    onQuestionChange,
+    onOptionsChange,
+    onDeleteQuestion,
+    duplicateQuestion,
+    onRequiredChange,
+  } = useCreateFormStore();
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onQuestionChange(question.index, { questionText: e.target.value });
   };
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     onQuestionChange(question.index, { questionType: e.target.value });
+  };
+
+  let enabled = question.required;
+
+  const handleRequiredChange = () => {
+    const newValue = !enabled;
+    onRequiredChange(question.index, newValue);
   };
 
   return (
@@ -61,7 +69,22 @@ const Questions = ({
 
       <QuestionType question={question} onOptionsChange={onOptionsChange} />
 
-      <div className="md:col-span-3 flex justify-end items-center gap-4">
+      <div className="md:col-span-3 flex justify-end items-center gap-4 mt-5">
+        <div className="flex gap-3">
+          <h1>Required</h1>
+          <button
+            onClick={() => handleRequiredChange()}
+            className={`relative inline-flex items-center h-6 w-11 rounded-full transition-colors duration-300 focus:outline-none ${
+              enabled ? "bg-blue-600" : "bg-gray-300"
+            }`}
+          >
+            <span
+              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300 ${
+                enabled ? "translate-x-6" : "translate-x-1"
+              }`}
+            />
+          </button>
+        </div>
         <Copy
           className="cursor-pointer"
           onClick={() => duplicateQuestion(question.index)}

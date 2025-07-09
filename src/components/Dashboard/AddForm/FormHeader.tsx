@@ -1,9 +1,9 @@
 "use client";
-import useFormStore from "@/store/useFormStore";
+import useCreateFormStore from "@/store/useCreateFormStore";
 import React from "react";
 
 const FormHeader = () => {
-  const { formHeader, setFormHeader } = useFormStore();
+  const { formHeader, setFormHeader } = useCreateFormStore();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
