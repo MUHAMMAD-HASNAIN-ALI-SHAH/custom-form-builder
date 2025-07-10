@@ -53,13 +53,12 @@ const Questions = ({
         onChange={handleCategoryChange}
         className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
-        <option value="short">Short Answer</option>
+        <option value="text">Short Answer</option>
         <option value="email">Email</option>
         <option value="number">Number</option>
         <option value="paragraph">Paragraph</option>
         <option value="multiple-choice">Multiple Choice</option>
         <option value="dropdown">Dropdown</option>
-        <option value="radio">Radio</option>
         <option value="check-box">Check Box</option>
         <option value="linear-scale">Linear Scale</option>
         <option value="date">Date</option>
