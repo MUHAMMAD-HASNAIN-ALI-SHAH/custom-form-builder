@@ -1,5 +1,6 @@
 import axios from "axios";
 import { create } from "zustand";
+import { convertToBase64 } from "@/lib/base64";
 
 interface Questions {
   index: number;
@@ -33,10 +34,15 @@ interface SubmitFormState {
     e: React.ChangeEvent<HTMLInputElement>,
     index: number
   ) => void;
+  handleImageChange: (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => Promise<void>;
+  onSubmit: (e:any) => void;
   getTheForm: (formId: string) => Promise<void>;
 }
 
-const useSubmitFormStore = create<SubmitFormState>((set) => ({
+const useSubmitFormStore = create<SubmitFormState>((set, get) => ({
   form: [],
   title: "Untitled Form",
   description: "No description provided",
@@ -81,6 +87,60 @@ const useSubmitFormStore = create<SubmitFormState>((set) => ({
       };
       return { form: updated };
     });
+  },
+
+  handleImageChange: async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      try {
+        const imageBase64 = await convertToBase64(file);
+        set((state) => {
+          const updated = [...state.form];
+          updated[index] = {
+            ...updated[index],
+            answer: [imageBase64 as string],
+            error: false,
+          };
+          return { form: updated };
+        });
+      } catch (error) {
+        console.error("Error converting image to base64:", error);
+      }
+    }
+  },
+
+  onSubmit: async (e) => {
+    e.preventDefault();
+    try {
+      let hasError = false;
+      set((state) => {
+        const updated = [...state.form];
+
+        const check = updated.map((res) => {
+          const isEmpty = res.required && res.answer.length === 0;
+          if (isEmpty) hasError = true;
+          return {
+            ...res,
+            error: isEmpty,
+          };
+        });
+
+        return { form: check };
+      });
+
+      if (hasError) {
+        console.warn("Form has validation errors");
+        return;
+      }
+
+      console.log(get().form);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      throw new Error("Failed to submit form");
+    }
   },
 
   getTheForm: async (formId: string) => {
