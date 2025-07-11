@@ -13,10 +13,10 @@ interface Questions {
 interface SubmitFormState {
   form: {
     required: boolean;
-    questionText?: string;
-    questionType?: string;
-    options?: string[];
-    index?: number;
+    questionText: string;
+    questionType: string;
+    options: string[];
+    index: number;
     answer: (string | number | boolean | null | File | Blob | ArrayBuffer)[];
     error: boolean;
   }[];
