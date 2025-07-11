@@ -38,7 +38,8 @@ interface SubmitFormState {
     e: React.ChangeEvent<HTMLInputElement>,
     index: number
   ) => Promise<void>;
-  onSubmit: (e:any) => void;
+  onSubmit: (e: any) => void;
+  onClear: () => void;
   getTheForm: (formId: string) => Promise<void>;
 }
 
@@ -141,6 +142,16 @@ const useSubmitFormStore = create<SubmitFormState>((set, get) => ({
       console.error("Error submitting form:", error);
       throw new Error("Failed to submit form");
     }
+  },
+
+  onClear: () => {
+    set({
+      form: get().form.map((question) => ({
+        ...question,
+        answer: [],
+        error: false,
+      })),
+    });
   },
 
   getTheForm: async (formId: string) => {

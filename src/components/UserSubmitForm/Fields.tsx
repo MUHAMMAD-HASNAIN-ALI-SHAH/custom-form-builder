@@ -100,7 +100,6 @@ const Fields = ({
         question.options?.length === 2 && (
           <LinearScale
             question={question}
-            getInputClasses={getInputClasses}
             index={index}
           />
         )}
