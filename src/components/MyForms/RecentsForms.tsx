@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import useFormStore from "@/store/useFormStore";
 import { Loader2 } from "lucide-react";
+import { redirect } from "next/navigation";
 
 const RecentsForms = () => {
   const { forms, getForms, getFormLoader, getFormError } = useFormStore();
@@ -29,7 +30,8 @@ const RecentsForms = () => {
                   {forms.map((form, index) => (
                     <div
                       key={index}
-                      className="flex flex-col justify-center gap-8 bg-white shadow-2xl rounded-lg py-7"
+                      onClick={() => redirect(`/dashboard/my-form/${form._id}`)}
+                      className="flex flex-col cursor-pointer justify-center gap-8 bg-white shadow-2xl rounded-lg py-7"
                     >
                       {/* Top 60%: Icon */}
                       <div className="flex items-center justify-center text-7xl">

@@ -9,7 +9,6 @@ interface PageProps {
 
 const Page = async ({ params }: PageProps) => {
   const formId = await params.formId;
-
   return (
     <div className="bg-gray-200 min-h-screen w-full">
       <div className="w-full max-w-2xl mx-auto pt-4">

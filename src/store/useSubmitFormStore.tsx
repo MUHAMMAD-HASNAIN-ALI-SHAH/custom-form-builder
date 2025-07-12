@@ -178,7 +178,6 @@ const useSubmitFormStore = create<SubmitFormState>((set, get) => ({
     } catch (error) {
       set({ loader: false, gettingFormError: true });
       console.error("Error fetching form:", error);
-      throw new Error("Failed to fetch form");
     }
   },
 }));
