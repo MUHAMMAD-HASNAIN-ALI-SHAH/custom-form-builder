@@ -1,6 +1,6 @@
 import React from 'react'
-import List from '../Categories/List';
-import LinearScale from '../Categories/LinearScale';
+import List from './Categories/List';
+import LinearScale from './Categories/LinearScale';
 
 type QuestionTypeProps = {
   question: {
@@ -9,10 +9,9 @@ type QuestionTypeProps = {
     questionText: string;
     options: string[];
   };
- onOptionsChange: (index: number, newOptions: string[]) => void;
 };
 
-const QuestionType: React.FC<QuestionTypeProps> = ({ question, onOptionsChange }) => {
+const QuestionType: React.FC<QuestionTypeProps> = ({ question }) => {
   return (
     <>
       {(question.questionType === "multiple-choice" ||
@@ -22,14 +21,12 @@ const QuestionType: React.FC<QuestionTypeProps> = ({ question, onOptionsChange }
         <List
           index={question.index}
           options={question.options}
-          onOptionsChange={onOptionsChange}
         />
       )}
       {question.questionType === "linear-scale" && (
         <LinearScale
           index={question.index}
           options={question.options}
-          onOptionsChange={onOptionsChange}
         />
       )}
     </>

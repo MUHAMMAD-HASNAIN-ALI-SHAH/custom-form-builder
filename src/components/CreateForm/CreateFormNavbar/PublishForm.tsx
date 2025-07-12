@@ -99,7 +99,8 @@ const PublishForm = () => {
     <div className="flex items-center space-x-2">
       <Button
         onClick={handlePublish}
-        className="cursor-pointer bg-blue-600 hover:bg-blue-800"
+        variant={"ghost"}
+        className="px-6 py-4 border-2 border-blue-500 text-blue-500 text-lg cursor-pointer rounded-md"
       >
         Publish
       </Button>

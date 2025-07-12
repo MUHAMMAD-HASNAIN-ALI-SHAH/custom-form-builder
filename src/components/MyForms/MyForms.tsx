@@ -1,5 +1,5 @@
 import React from "react";
-import Forms from "./Forms";
+import RecentsForms from "./RecentsForms";
 
 const formData = [
   { name: "Contact Form", responses: 23 },
@@ -12,10 +12,9 @@ const formData = [
 
 const MyForms = () => {
   return (
-    <div className="w-full px-6">
-      <h1>My Recent Form</h1>
-      
-        <Forms />
+    <div className="w-full">
+      <h2 className="text-xl font-semibold">My Recent Form</h2>
+      <RecentsForms />
     </div>
   );
 };

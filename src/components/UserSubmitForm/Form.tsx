@@ -15,7 +15,9 @@ const Form = () => {
       {form.map((question, index) => (
         <div
           key={index}
-          className={`${question.error ? "border border-red-500" : ""} w-full mb-5 flex flex-col gap-2 justify-between px-7 rounded-lg bg-white py-7`}
+          className={`${
+            question.error ? "border border-red-500" : ""
+          } w-full mb-5 flex flex-col gap-2 justify-between px-7 rounded-lg bg-white py-7`}
         >
           <h1 className="font-semibold text-lg">{question.questionText}</h1>
 

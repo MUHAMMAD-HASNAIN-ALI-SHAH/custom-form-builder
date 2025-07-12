@@ -1,4 +1,4 @@
-import Navbar from "@/components/Dashboard/Navbar/Navbar";
+import DashboardNavbar from "@/components/Dashboard/DashboardNavbar/DashboardNavbar";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import React from "react";
@@ -8,12 +8,12 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-    const session = await auth();
-      if (!session) redirect("/");
+  const session = await auth();
+  if (!session) redirect("/");
+  console.log(session.user)
   return (
-    <div className="min-h-screen flex">
-      <Navbar />
-      <main className="flex-1 p-6 bg-gray-100">{children}</main>
+    <div className="bg-gray-200 w-full">
+      <main className="bg-gray-100">{children}</main>
     </div>
   );
 }

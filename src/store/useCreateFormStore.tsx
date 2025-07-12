@@ -15,7 +15,6 @@ interface CreateFormState {
     description: string;
   };
   questions: Questions[];
-  setFormHeader: (field: string, value: string) => void;
   addQuestion: () => void;
   onQuestionChange: (index: number, updated: Partial<Questions>) => void;
   onOptionsChange: (index: number, newOptions: string[]) => void;
@@ -31,27 +30,32 @@ interface CreateFormState {
       description: string;
     }
   ) => Promise<any>;
+  handleFormHeaderChange: (  // Form Header Handling
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
+  handleQuestionInputChange: (
+    index: number,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
+  handleQuestionCategoryChange: (
+    index: number,
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => void;
+  handleRequiredChange: (index: number) => void;
 }
 
-const useCreateFormStore = create<CreateFormState>((set) => ({
+const useCreateFormStore = create<CreateFormState>((set, get) => ({
   questions: [],
   formHeader: {
     title: "",
     description: "",
   },
-  setFormHeader: (field, value) =>
-    set((state) => ({
-      formHeader: {
-        ...state.formHeader,
-        [field]: value,
-      },
-    })),
   addQuestion: () => {
     set((state) => {
       const newIndex = state.questions.length;
       const newQuestion: Questions = {
         index: newIndex,
-        questionType: "short",
+        questionType: "text",
         questionText: "",
         required: false,
         options: [],
@@ -134,6 +138,44 @@ const useCreateFormStore = create<CreateFormState>((set) => ({
       console.error(error);
       return Promise.reject(error);
     }
+  },
+  handleFormHeaderChange: (e) => {
+    const { name, value } = e.target;
+    set((state) => ({
+      formHeader: {
+        ...state.formHeader,
+        [name]: value,
+      },
+    }));
+  },
+  handleQuestionInputChange: (index, e) => {
+    const { value } = e.target;
+    set((state) => ({
+      questions: state.questions.map((q) =>
+        q.index === index ? { ...q, questionText: value } : q
+      ),
+    }));
+  },
+  handleQuestionCategoryChange: (index, e) => {
+    const { value } = e.target;
+    set((state) => ({
+      questions: state.questions.map((q) =>
+        q.index === index ? { ...q, questionType: value } : q
+      ),
+    }));
+  },
+  handleRequiredChange: (index) => {
+    set((state) => {
+      const question = state.questions.find((q) => q.index === index);
+      if (!question) return state;
+
+      const updatedRequired = !question.required;
+      return {
+        questions: state.questions.map((q) =>
+          q.index === index ? { ...q, required: updatedRequired } : q
+        ),
+      };
+    });
   },
 }));
 

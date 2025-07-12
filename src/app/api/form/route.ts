@@ -8,6 +8,7 @@ export async function POST(request: Request) {
   await connectDB();
 
   try {
+    console.log("Processing form submission...");
     const body = await request.json();
     const { formHeader, questions } = body;
     const session = await auth();
@@ -33,6 +34,9 @@ export async function POST(request: Request) {
         index: question.index,
       }))
     );
+
+    console.log("Form header added:", addFormHeader);
+    console.log("Questions added:", insertedQuestions);
 
     return NextResponse.json(
       { message: "Form added successfully" },

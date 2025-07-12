@@ -1,12 +1,13 @@
+import useCreateFormStore from "@/store/useCreateFormStore";
 import { X } from "lucide-react";
 
 interface ListProps {
   index: number;
   options: string[];
-  onOptionsChange: (questionIndex: number, newOptions: string[]) => void;
 }
 
-const List: React.FC<ListProps> = ({ index, options, onOptionsChange }) => {
+const List: React.FC<ListProps> = ({ index, options }) => {
+  const { onOptionsChange } = useCreateFormStore();
   const handleChange = (value: string, optionIndex: number) => {
     const updated = [...options];
     updated[optionIndex] = value;
