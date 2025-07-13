@@ -10,7 +10,6 @@ export default async function DashboardLayout({
 }) {
   const session = await auth();
   if (!session) redirect("/");
-  console.log(session.user)
   return (
     <div className="bg-gray-200 w-full">
       <main className="bg-gray-100">{children}</main>

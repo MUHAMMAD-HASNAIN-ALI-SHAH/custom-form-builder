@@ -1,4 +1,3 @@
-import { auth } from "@/lib/auth";
 import connectDB from "@/lib/db";
 import Form from "@/schemas/form.schema";
 import Questions from "@/schemas/questions.schema";

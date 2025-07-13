@@ -12,6 +12,7 @@ interface Questions {
 
 interface SubmitFormState {
   form: {
+    _id?: string;
     required: boolean;
     questionText: string;
     questionType: string;
@@ -21,9 +22,13 @@ interface SubmitFormState {
     error: boolean;
   }[];
   title: string;
+  submitFormLoader: boolean;
+  submitFormError: boolean;
+  submited: boolean;
   description: string;
   loader: boolean;
   gettingFormError: boolean;
+  anotherSubmit: () => void;
   handleStringsInputChange: (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -38,7 +43,7 @@ interface SubmitFormState {
     e: React.ChangeEvent<HTMLInputElement>,
     index: number
   ) => Promise<void>;
-  onSubmit: (e: any) => void;
+  onSubmit: (e: any, formId: string) => void;
   onClear: () => void;
   getTheForm: (formId: string) => Promise<void>;
 }
@@ -49,6 +54,9 @@ const useSubmitFormStore = create<SubmitFormState>((set, get) => ({
   description: "No description provided",
   loader: false,
   gettingFormError: false,
+  submitFormLoader: false,
+  submitFormError: false,
+  submited: false,
   handleStringsInputChange: (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -113,7 +121,7 @@ const useSubmitFormStore = create<SubmitFormState>((set, get) => ({
     }
   },
 
-  onSubmit: async (e) => {
+  onSubmit: async (e, formId) => {
     e.preventDefault();
     try {
       let hasError = false;
@@ -136,13 +144,45 @@ const useSubmitFormStore = create<SubmitFormState>((set, get) => ({
         console.warn("Form has validation errors");
         return;
       }
+      const ans = get().form.map((question) => ({
+        questionNumber: question.index,
+        answer: question.answer,
+      }));
+      console.log(ans);
+      set({ submitFormLoader: true, submitFormError: false, submited: false });
+      const response = await axios.post(`/api/response/${formId}`, {
+        response: get().form.map((question) => ({
+          questionNumber: question.index,
+          answer: question.answer,
+        })),
+      });
 
-      console.log(get().form);
+      set({
+        submitFormLoader: false,
+        submitFormError: false,
+        submited: true,
+      });
     } catch (error) {
+      set({
+        submitFormLoader: false,
+        submitFormError: true,
+        submited: false,
+      });
       console.error("Error submitting form:", error);
       throw new Error("Failed to submit form");
     }
   },
+
+  anotherSubmit: () => {
+    set({
+      submited: false,
+      form: get().form.map((question) => ({
+        ...question,
+        answer: [],
+        error: false,
+      })),
+    });
+  },  
 
   onClear: () => {
     set({

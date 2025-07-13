@@ -3,15 +3,15 @@ import { Button } from "../ui/button";
 import Fields from "./Fields";
 import useSubmitFormStore from "@/store/useSubmitFormStore";
 
-const Form = () => {
-  const { form, onSubmit, onClear } = useSubmitFormStore();
+const Form = ({formId}:{formId:string}) => {
+  const { form, onSubmit, onClear, submitFormLoader } = useSubmitFormStore();
   const getInputClasses = (index: number) => {
     return `w-full sm:w-[50%] border-0 border-b-2 ${
       form[index]?.error ? "border-red-500" : "border-gray-300"
     } focus:border-blue-600 focus:outline-none py-2 px-1 text-gray-800 bg-transparent`;
   };
   return (
-    <form onSubmit={onSubmit} className="w-full">
+    <form onSubmit={(e)=>onSubmit(e,formId)} className="w-full">
       {form.map((question, index) => (
         <div
           key={index}
@@ -31,6 +31,7 @@ const Form = () => {
 
       <div className="w-full flex justify-between items-center px-7 py-4 rounded-lg">
         <Button
+          disabled={submitFormLoader}
           type="submit"
           className="bg-blue-700 cursor-pointer hover:bg-blue-800"
         >
